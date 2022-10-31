@@ -1,0 +1,156 @@
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button
+    class="btn btn-primary"
+    type="button"
+    (click)="openModal(template, 'CREATE', '')"
+  >
+    Add product
+  </button>
+</div>
+
+<div class="row mt-2">
+  <div class="col-md-4 mb-3" *ngFor="let event of products">
+    <div class="card text-center">
+      <div class="card-header">{{ event.category | uppercase }}</div>
+      <div class="card-body">
+        <h5 class="card-title">{{ event.name | titlecase }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ event.title }}</h6>
+        <p class="card-text">{{ event.description }}</p>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="openModal(template, 'UPDATE', event)"
+          >
+            Edit
+          </button>
+          <button
+            (click)="openModal(deleteTemplate, 'DELETE', event)"
+            type="button"
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        {{ event.price | currency: "INR" }}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for update -->
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ statusMsg | titlecase }} Product</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="closeModal()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="card-body" [formGroup]="productsForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="">Name</label>
+        <input
+          [class.is-invalid]="
+            productsForm.get('name').invalid && productsForm.get('name').touched
+          "
+          formControlName="name"
+          name="name"
+          type="text"
+          class="form-control rounded-0"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="">Title</label>
+        <input
+          [class.is-invalid]="
+            productsForm.get('title').invalid &&
+            productsForm.get('title').touched
+          "
+          formControlName="title"
+          name="title"
+          type="text"
+          class="form-control rounded-0"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Category</label>
+        <input
+          [class.is-invalid]="
+            productsForm.get('category').invalid &&
+            productsForm.get('category').touched
+          "
+          formControlName="category"
+          name="category"
+          type="text"
+          class="form-control rounded-0"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Price</label>
+        <input
+          [class.is-invalid]="
+            productsForm.get('price').invalid &&
+            productsForm.get('price').touched
+          "
+          formControlName="price"
+          name="price"
+          type="number"
+          class="form-control rounded-0"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Description</label>
+        <input
+          [class.is-invalid]="
+            productsForm.get('description').invalid &&
+            productsForm.get('description').touched
+          "
+          formControlName="description"
+          name="description"
+          type="text"
+          class="form-control rounded-0"
+          required
+        />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button
+          [disabled]="productsForm.invalid"
+          type="submit"
+          class="btn btn-success"
+        >
+          {{ statusMsg === "UPDATE" ? "Update" : "Submit" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Model for Delete -->
+<ng-template #deleteTemplate>
+  <div class="modal-body text-center">
+    <p>Do you want to delete {{ selectedData?.name | titlecase }} ?</p>
+    <div class="gap-2 d-md-flex" style="justify-content: center; gap: '10px'">
+      <button type="button" class="btn btn-primary" (click)="decline()">
+        No
+      </button>
+      <button type="button" class="btn btn-danger" (click)="confirm()">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>
